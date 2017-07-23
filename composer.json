@@ -1,5 +1,5 @@
 {
-    "name": "uphp/ORM",
+    "name": "uphp/orm",
     "type": "library",
     "description": "UPhp ORM is an open source ORM library based on the PHP-ActiveRecord pattern.",
     "keywords": ["uphp", "activerecord", "orm"],
