@@ -3,7 +3,10 @@
  * @package ActiveRecord
  */
 namespace ActiveRecord;
+
 use Closure;
+
+use ActiveRecord\exceptions\ConfigException;
 
 /**
  * Manages configuration options for ActiveRecord.

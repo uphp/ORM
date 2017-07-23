@@ -3,7 +3,10 @@
  * @package ActiveRecord
  */
 namespace ActiveRecord;
+
 use ReflectionClass;
+
+use ActiveRecord\exceptions\ActiveRecordException;
 
 /**
  * Simple class that caches reflections of classes.

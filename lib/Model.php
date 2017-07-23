@@ -4,6 +4,12 @@
  */
 namespace ActiveRecord;
 
+use ActiveRecord\exceptions\ActiveRecordException;
+use ActiveRecord\exceptions\ReadOnlyException;
+use ActiveRecord\exceptions\RecordNotFound;
+use ActiveRecord\exceptions\RelationshipException;
+use ActiveRecord\exceptions\UndefinedPropertyException;
+
 /**
  * The base class for your models.
  *

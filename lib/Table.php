@@ -4,6 +4,12 @@
  */
 namespace ActiveRecord;
 
+use ActiveRecord\exceptions\RelationshipException;
+use ActiveRecord\relationships\HasMany;
+use ActiveRecord\relationships\BelongsTo;
+use ActiveRecord\relationships\HasOne;
+use ActiveRecord\relationships\HasAndBelongsToMany;
+
 /**
  * Manages reading and writing to a database table.
  *

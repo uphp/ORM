@@ -4,6 +4,8 @@
  */
 namespace ActiveRecord;
 
+use ActiveRecord\exceptions\ActiveRecordException;
+
 /**
  * Helper class for building sql statements progmatically.
  *

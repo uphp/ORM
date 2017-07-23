@@ -3,7 +3,10 @@
  * @package ActiveRecord
  */
 namespace ActiveRecord;
+
 use Closure;
+
+use ActiveRecord\exceptions\ActiveRecordException;
 
 /**
  * Callbacks allow the programmer to hook into the life cycle of a {@link Model}.

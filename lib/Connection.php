@@ -12,6 +12,8 @@ use PDO;
 use PDOException;
 use Closure;
 
+use ActiveRecord\exceptions\DatabaseException;
+
 /**
  * The base class for database connection adapters.
  *
@@ -145,14 +147,14 @@ abstract class Connection
 	 */
 	private static function load_adapter_class($adapter)
 	{
-		$class = "Adapters\\" . ucwords($adapter) . 'Adapter';
-		$fqclass = '\\ActiveRecord\\' . $class;
+		$class = ucwords($adapter) . 'Adapter';
+		$fqclass = '\\ActiveRecord\\adapters\\' . $class;
 		$source = __DIR__ . "/adapters/$class.php";
 
 		if (!file_exists($source))
 			throw new DatabaseException("$fqclass not found!");
 
-		require_once($source);
+		//require_once($source);
 		return $fqclass;
 	}
 
@@ -246,7 +248,7 @@ abstract class Connection
 	 * Class Connection is a singleton. Access it via instance().
 	 *
 	 * @param array $info Array containing URL parts
-	 * @return Connection
+     * @throws DatabaseException
 	 */
 	protected function __construct($info)
 	{

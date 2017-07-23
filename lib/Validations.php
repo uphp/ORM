@@ -10,6 +10,8 @@
 
 namespace ActiveRecord;
 
+use ActiveRecord\exceptions\ValidationsArgumentError;
+
 /**
  * Manages validations for a {@link Model}.
  *
