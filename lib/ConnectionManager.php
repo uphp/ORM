@@ -24,15 +24,30 @@ class ConnectionManager extends Singleton
 	 * @param string $name Optional name of a connection
 	 * @return Connection
 	 */
-	public static function get_connection($name=null)
+	public static function get_connection($enviroment=null, $dbDefault=null)
 	{
 		$config = Config::instance();
-		$name = $name ? $name : $config->get_default_connection();
 
-		if (!isset(self::$connections[$name]) || !self::$connections[$name]->connection)
-			self::$connections[$name] = Connection::instance($config->get_connection($name));
+		if (! $enviroment) {
+			if (isset($config->get_connections()["enviroment"])) {
+				$enviroment = $config->get_connections()["enviroment"];
+			} else {
+				$enviroment = $config->get_default_enviroment();
+			}
+		}
 
-		return self::$connections[$name];
+		if (! $dbDefault) {
+			if (isset($config->get_connections()["default"])) {
+				$dbDefault = $config->get_connections()["default"];
+			} else {
+				$dbDefault = $config->get_default_db();
+			}
+		}
+
+		if (!isset(self::$connections[$enviroment][$dbDefault]) || !self::$connections[$enviroment][$dbDefault])
+			self::$connections[$enviroment][$dbDefault] = Connection::instance($config->get_connection($enviroment, $dbDefault));
+
+		return self::$connections[$enviroment][$dbDefault];
 	}
 
 	/**

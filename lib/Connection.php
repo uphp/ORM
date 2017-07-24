@@ -106,28 +106,31 @@ abstract class Connection
 	 * @return Connection
 	 * @see parse_connection_url
 	 */
-	public static function instance($connection_string_or_connection_name=null)
+	public static function instance($connectionArray=null, $connectionDefault=null)
 	{
 		$config = Config::instance();
 
-		if (strpos($connection_string_or_connection_name, '://') === false)
+		if (! is_array($connectionArray)) throw new DataBaseException("Config database connections is not array");
+
+		/*if (strpos($connection_string_or_connection_name, '://') === false)
 		{
 			$connection_string = $connection_string_or_connection_name ?
 				$config->get_connection($connection_string_or_connection_name) :
 				$config->get_default_connection_string();
 		}
 		else
-			$connection_string = $connection_string_or_connection_name;
+			$connection_string = $connection_string_or_connection_name;*/
 
-		if (!$connection_string)
-			throw new DatabaseException("Empty connection string");
+		/*if (!$connectionArray)
+			throw new DatabaseException("Empty connection string");*/
 
-		$info = static::parse_connection_url($connection_string);
-		$fqclass = static::load_adapter_class($info->protocol);
+
+		//$info = static::parse_connection_url($connection_string);
+		$fqclass = static::load_adapter_class($connectionArray["driver"]);
 
 		try {
-			$connection = new $fqclass($info);
-			$connection->protocol = $info->protocol;
+			$connection = new $fqclass($connectionArray);
+			$connection->protocol = $connectionArray["driver"];
 			$connection->logging = $config->get_logging();
 			$connection->logger = $connection->logging ? $config->get_logger() : null;
 
@@ -254,17 +257,19 @@ abstract class Connection
 	{
 		try {
 			// unix sockets start with a /
-			if ($info->host[0] != '/')
-			{
-				$host = "host=$info->host";
+			//if ($info["server"] != '/')
+			//{
+				$host = "host=" . $info["server"];
 
-				if (isset($info->port))
-					$host .= ";port=$info->port";
-			}
-			else
-				$host = "unix_socket=$info->host";
+				if (isset($info["port"])) 
+					$host .= ";port=" . $info["port"];
+				else
+					$host .= ";port=" . static::$DEFAULT_PORT;
+			//}
+			//else
+				//$host = "unix_socket=$info->host";
 
-			$this->connection = new PDO("$info->protocol:$host;dbname=$info->db", $info->user, $info->pass, static::$PDO_OPTIONS);
+			$this->connection = new PDO($info["driver"] . ":" . $host . ";dbname=" . $info["dbname"], $info["user"], $info["password"], static::$PDO_OPTIONS);
 		} catch (PDOException $e) {
 			throw new DatabaseException($e);
 		}

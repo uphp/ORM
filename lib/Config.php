@@ -44,14 +44,16 @@ class Config extends Singleton
 	 *
 	 * @var string
 	 */
-	private $default_connection = 'development';
+	private $default_connection = []; //TODO doc
+	private $default_enviroment = "development"; //TODO doc
+	private $default_db = "sqlite"; //TODO doc
 
 	/**
 	 * Contains the list of database connection strings.
 	 *
 	 * @var array
 	 */
-	private $connections = array();
+	private $connections = [];
 
 	/**
 	 * Directory for the auto_loading of model classes.
@@ -133,13 +135,17 @@ class Config extends Singleton
 	 * @return void
 	 * @throws ActiveRecord\ConfigException
 	 */
-	public function set_connections($connections, $default_connection=null)
+	public function set_connections($connections)
 	{
-		if (!is_array($connections))
-			throw new ConfigException("Connections must be an array");
+		if (! is_array($connections) || ! isset($connections["connections"]))
+			throw new ConfigException("Index connections not exists or not is array");
 
-		if ($default_connection)
-			$this->set_default_connection($default_connection);
+		$enviroment = (isset($connections["environment"])) ? $connections["environment"] : $this->get_default_enviroment();
+		$dbDefault = (isset($connections["default"])) ? $connections["default"] : $this->get_default_db();
+
+		if(! isset($connections["connections"][$enviroment][$dbDefault])) throw new ConfigException("Config for " . $dbDefault . " not exists");
+
+		$this->set_default_connection($connections["connections"][$enviroment][$dbDefault]);
 
 		$this->connections = $connections;
 	}
@@ -160,12 +166,11 @@ class Config extends Singleton
 	 * @param string $name Name of connection to retrieve
 	 * @return string connection info for specified connection name
 	 */
-	public function get_connection($name)
+	public function get_connection($enviroment, $dbDefault)
 	{
-		if (array_key_exists($name, $this->connections))
-			return $this->connections[$name];
-
-		return null;
+		if (! isset($this->connections["connections"])) throw new ConfigException("Index CONNECTIONS not found in database.php");
+		if (! array_key_exists($enviroment, $this->connections["connections"])) return null;
+		return $this->connections["connections"][$enviroment][$dbDefault];
 	}
 
 	/**
@@ -179,14 +184,27 @@ class Config extends Singleton
 			$this->connections[$this->default_connection] : null;
 	}
 
+	
+	//TODO doc
+	public function get_default_connection()
+	{
+		return $this->default_connection;
+	}
+
+	//TODO doc
+	public function set_default_connection($configDB)
+	{
+		$this->default_connection = $configDB;
+	}
+	
 	/**
 	 * Returns the name of the default connection.
 	 *
 	 * @return string
 	 */
-	public function get_default_connection()
+	public function get_default_enviroment()
 	{
-		return $this->default_connection;
+		return $this->default_enviroment;
 	}
 
 	/**
@@ -195,9 +213,21 @@ class Config extends Singleton
 	 * @param string $name Name of a connection in the connections array
 	 * @return void
 	 */
-	public function set_default_connection($name)
+	public function set_default_enviroment($name)
 	{
-		$this->default_connection = $name;
+		$this->default_enviroment = $name;
+	}
+
+	//TODO doc
+	public function set_default_db($name)
+	{
+		$this->default_db = $name;
+	}
+
+	//TODO doc
+	public function get_default_db()
+	{
+		return $this->default_db;
 	}
 
 	/**

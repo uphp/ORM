@@ -126,7 +126,7 @@ class Model
 	 *
 	 * @var string
 	 */
-	static $connection;
+	static $enviroment;
 
 	/**
 	 * Set to the name of the database this Model's table is in.

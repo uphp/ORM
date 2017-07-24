@@ -109,15 +109,19 @@ class Table
 
 	public function reestablish_connection($close=true)
 	{
+		// if properties are null the connection manager will use the default connection
+		$enviroment = $this->class->getStaticPropertyValue('enviroment',null); //propriedade enviroment definido nas classes de models
+		$dbDefault = $this->class->getStaticPropertyValue('db',null); //propriedade db definido nas classes de models
+
 		// if connection name property is null the connection manager will use the default connection
-		$connection = $this->class->getStaticPropertyValue('connection',null);
+		//$connection = $this->class->getStaticPropertyValue('connection',null);
 
 		if ($close)
 		{
-			ConnectionManager::drop_connection($connection);
+			ConnectionManager::drop_connection($connection); //TODO
 			static::clear_cache();
 		}
-		return ($this->conn = ConnectionManager::get_connection($connection));
+		return ($this->conn = ConnectionManager::get_connection($enviroment, $dbDefault));
 	}
 
 	public function create_joins($joins)
