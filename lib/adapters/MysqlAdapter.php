@@ -17,20 +17,6 @@ class MysqlAdapter extends Connection
 {
 	static $DEFAULT_PORT = 3306;
 
-	public static function connect(){
-
-		\ActiveRecord\Config::initialize(function($cfg)
-        {
-			$configDatabase = require("config/database.php");
-            //$cfg->set_model_directory(__DIR__ . '/models');
-            //$cfg->set_connections(array('development' => 'mysql://root@127.0.0.1/dbteste'));
-			$cfg->set_connections($configDatabase);
-
-            // you can change the default connection with the below
-            //$cfg->set_default_connection('production');
-        });
-	}
-
 	public function limit($sql, $offset, $limit)
 	{
 		$offset = is_null($offset) ? '' : intval($offset) . ',';
