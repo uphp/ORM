@@ -134,8 +134,8 @@ abstract class Connection
 			$connection->logging = $config->get_logging();
 			$connection->logger = $connection->logging ? $config->get_logger() : null;
 
-			if (isset($info->charset))
-				$connection->set_encoding($info->charset);
+			if (isset($connectionArray["charset"]))
+				$connection->set_encoding($connectionArray["charset"]);
 		} catch (PDOException $e) {
 			throw new DatabaseException($e);
 		}
